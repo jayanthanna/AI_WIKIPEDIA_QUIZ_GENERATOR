@@ -18,6 +18,17 @@ else:
 
 init_db()
 
+if os.getenv("RESET_DB_ON_START") == "true":
+    print("⚠️ RESET_DB_ON_START is true → clearing quiz table...")
+    try:
+        db = SessionLocal()
+        db.query(Quiz).delete()
+        db.commit()
+        db.close()
+        print("✅ Database cleared successfully.")
+    except Exception as e:
+        print("❌ Error clearing DB:", e)
+
 @app.route("/")
 def home():
     return {"message": "AI Wiki Quiz Generator API is running"}
